@@ -18,3 +18,5 @@ then in `analysis.ipynb` I:
 2. This analysis won't run natively on your computer. You need to load `v3-polars` into the same local directory then download all data to run this.
 
 I will probably come back to this when I have some time, but also encourage you to help out :)
+
+*These are my independent thoughts and do not necessarily represent the views of my employer.*
