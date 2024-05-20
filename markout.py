@@ -24,8 +24,6 @@ def load_all_swaps(
         data: pl.DataFrame
 ) -> pl.DataFrame:
     
-    #TODO: (in process) convert this function out of v3-polars reliance
-
     df = (data
           .filter(pl.col('liquidity_pool_address') == pool_address)
           .sort(['block_number', 'log_index'])
