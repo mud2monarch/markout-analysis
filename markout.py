@@ -1,27 +1,36 @@
 import polars as pl
-from state import v3Pool
 from datetime import datetime
+
+def addPrice(
+        data: pl.DataFrame
+) -> pl.DataFrame:
+    """
+    Helper function to add a new column with sqrtPriceX96 converted to price
+    """
+    """
+        Austin TODO: i think you should also be able to apply map_batches
+    I don't think this is possible actually because the problem is that you need to use native python dtypes.
+    but maybe? not a priority.
+    """
+    sqrtPrice_list = data.select(pl.col("sqrt_price_x96")).to_series().to_list()
+    price_list = [(int(i)/(2 ** 96))**2 for i in sqrtPrice_list]
+    
+    df = data.with_columns(price = pl.Series(values=price_list, dtype=pl.Float64))
+    
+    return df
 
 def load_all_swaps(
         pool_address: str,
-        chain: str
+        data: pl.DataFrame
 ) -> pl.DataFrame:
     
-    #TODO: add arbitrary date periods
+    #TODO: (in process) convert this function out of v3-polars reliance
 
-    pool = v3Pool(pool_address.lower(), chain.lower())
-
-    start_date = datetime(2022, 6, 1)
-    end_date = datetime(2022, 9, 1)
-
-    # put raw data into a folder called 'data' in the home of the directory
-    df = (pool
-        .readFromMemoryOrDisk(data='pool_swap_events', data_path='data')
-        .filter(
-            (pl.col('block_timestamp') >= start_date) &
-            (pl.col('block_timestamp') < end_date)
-        )
+    df = (data
+          .filter(pl.col('liquidity_pool_address') == pool_address)
+          .sort(['block_number', 'log_index'])
     )
+
     return df
 
 def construct_markout(

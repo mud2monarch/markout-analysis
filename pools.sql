@@ -1,3 +1,5 @@
+-- this is queried from our GBQ instance, but it's the unmodified Allium tables.
+
 SELECT
   distinct LIQUIDITY_POOL_ADDRESS,
   POOL_NAME,
