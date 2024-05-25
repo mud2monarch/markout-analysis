@@ -3,6 +3,9 @@ This is a hackathon project I did that uses [v3-polars](Uniswap/v3-polars) to ca
 
 The project was inspired by the paper [Learning from DeFi: Would Automated Market Makers Improve Equity Trading?](https://deliverypdf.ssrn.com/delivery.php?ID=361095067121094007068095019010002123098078055012042006031076074011117098024114099087045052103009119007115102119019003029075008109011088034000024070103015075066095127032038033078030002082103106101122126014108112027031030095082086095104071126127080028110&EXT=pdf&INDEX=TRUE) by Malinova and Park (2023). Intuitively, it seems like LPs (passive market makers) would be most profitable in low-volume markets where it’s not profitable to actively market make. There have been a lot of studies of LP profitability, but most limit their analysis to ETH-USDC and other high volume markets. My project attempted to conduct a markout analysis across a variety of low and high volume asset pairs to test the intuition. It built on a colleague's past LP markout analysis.
 
+![chart showing decreasing benefit as volume increases](https://i.imgur.com/nrcNyON.png)
+![chart showing decreasing benefit as volume increases](https://i.imgur.com/MjjeBha.png)
+
 essentially I define three functions in markout.py:
 1. `load_all_swaps` - takes in a pool address and chain, uses readFromMemoryOrDisk and puts the results into a dataframe.
 2. `construct_markout` - takes in the data from #1, the decimals of the tokens, and whether WETH is token0 or not, and constructs markout and volume columns for each row (which is one transaction).
