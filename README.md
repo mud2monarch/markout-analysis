@@ -33,6 +33,20 @@ Okay now I'm going to try this method lmao
 5. Extract the summed markout and volume values for each pool address into a new DataFrame using the select method.
 6. Plot the markout versus volume
 
+# update 5/26
+Something like:
+- Load everything into a DataFrame
+- Sort the DataFrame by pool address, block number, and log index
+- Add pool price from sqrtPriceX96
+- Add markout price based on pool price
+- Add execution price based on token0/token1
+- Add direction
+- Add volume
+- Calculate markout per-txn
+
+- Cumsum markout and volume per-address
+- Plot
+
 ``` python
 # Calculate the markout price for each row
 df = df.with_columns(

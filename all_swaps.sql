@@ -1,16 +1,16 @@
 SELECT
-    liquidity_pool_address,
-    block_timestamp,
+-- cols are renamed to match v3-polars `swaps` schema
+    liquidity_pool_address as address, -- the contract address of the pool; from Allium it comes in all lowercase, but it shouldn't matter (I think)
+    block_timestamp, -- from Allium this comes in %Y-%m-%d %H:%M:%S %Z
     block_number,
-    log_index,
-    transaction_hash,
-    token0_amount,
-    token0_amount_raw,
+    log_index as transaction_index, -- you need this in order to sort intra-block trades
+    transaction_hash, -- for debugging. TODO: remove this column.
+    token0_amount_raw_str as amount0, -- using the string value for max precision.
     token0_decimals,
-    token1_amount,
-    token1_amount_raw,
+    token1_amount_raw_str as amount1,-- using the string value for max precision.
     token1_decimals,
-    sqrt_price_x96
+    sqrt_price_x96 as sqrtPriceX96, -- required. comes as a string.
+    token0_symbol -- to identify WETH location
 FROM `uniswap-labs.allium_ethereum.dex_uniswap_v3_protocol_liquidity_pool_events`
 WHERE liquidity_pool_address in (
   SELECT
