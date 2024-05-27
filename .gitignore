@@ -2,3 +2,5 @@
 # if you want the data to collaborate, message me on twitter, same handle.
 all_swaps.csv
 swaps_cut.csv
+swaps_plus_markout_cut.csv
+eth_usdc_pools.csv
