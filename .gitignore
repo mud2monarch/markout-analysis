@@ -3,3 +3,5 @@
 all_swaps.csv
 swaps_cut.csv
 swaps_plus_markout_cut.csv
+eth_usdc_pools.csv
+eth_usdc_cut.csv

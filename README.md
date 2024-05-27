@@ -64,3 +64,6 @@ pool_summary = df.groupby("pool_address").agg(
     ]
 )
 ```
+
+# notes 5/26
+- markout needs to be WETH-denominated?

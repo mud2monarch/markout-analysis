@@ -30,18 +30,20 @@ def addPrice(
         data: pl.DataFrame
 ) -> pl.DataFrame:
     """
-    Helper function to add a new column with sqrtPriceX96 converted to price
+    Helper function to add a new column with sqrtPriceX96 converted to price, and decimal adjusted
     """
-    """
-    Austin TODO: i think you should also be able to apply map_batches
-    
-    Zach: I don't think this is possible actually because the problem is that you need to use native python dtypes.
-    but maybe? not a priority.
-    """
+
     sqrtPrice_list = data.select(pl.col('sqrtPriceX96')).to_series().to_list()
     price_list = [(int(i)/(2 ** 96))**2 for i in sqrtPrice_list]
     
-    df = data.with_columns(pool_price = pl.Series(values=price_list, dtype=pl.Float64))
+    # this returns the 'multiplicative inverse' of the pool price
+    # this is the right price to correspond with `execution_price = (10^(decimal1-decimal0))/(amount1/amount0)`.
+    # I think this is pretty jacked, but it should work.
+    # TODO: fix.
+
+    df = data.with_columns(
+        pool_price = 1/((pl.Series(values=price_list, dtype=pl.Float64))/(10 ** (pl.col('token1_decimals')-pl.col('token0_decimals'))))
+    )
     
     return df
 
@@ -73,7 +75,7 @@ def construct_markout (
         .with_columns(
             execution_price = ((10 ** (pl.col('token1_decimals')-pl.col('token0_decimals')))
                                 /
-                                (pl.col('amount1')/pl.col('amount0'))),
+                                (pl.col('amount1').abs()/pl.col('amount0').abs())),
             volume = pl
                 .when(pl.col('token0_symbol') == 'WETH') # if WETH is in token0 slot
                 .then(pl.col('amount0').abs()/(10 ** pl.col('token0_decimals'))) # then volume (in WETH) = amount0, decimal-adjusted
